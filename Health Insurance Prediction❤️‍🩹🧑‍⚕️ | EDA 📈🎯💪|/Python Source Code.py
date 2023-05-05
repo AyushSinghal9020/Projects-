@@ -14,6 +14,7 @@ from sklearn.preprocessing import FunctionTransformer
 # **MACHINE LEARNING MODELS**
 
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier
 
 # **METRICS**
 
@@ -49,7 +50,11 @@ def pre(dataframe):
 X_train , y_train = pre(train)
 X_test , y_test = pre(test)
 
-model = KNeighborsClassifier()
-model.fit(X_train , y_train)
+KNN = KNeighborsClassifier()
+KNN.fit(X_train , y_train)
 
-print(classification_report(y_test , model.predict(X_test)))
+DTC = DecisionTreeClassifier()
+DTC.fit(X_train , y_train)
+
+print(KNN , classification_report(y_test , KNN.predict(X_test)))
+print(DTC , classification_report(y_test , DTC.predict(X_test)))
