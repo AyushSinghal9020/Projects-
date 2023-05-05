@@ -1,4 +1,4 @@
-# 1 | Health Insurance Prediction ❤️‍🩹
+Health Insurance Prediction ❤️‍🩹
 
 ## About Dataset
 
@@ -40,11 +40,3 @@ The evaluation metric for this hackathon is ROC_AUC score.
 
 ## Public and Private split
 The public leaderboard is based on 40% of test data, while final rank would be decided on remaining 60% of test data (which is private leaderboard)
-
-## Guidelines for Final Submission
-Please ensure that your final submission includes the following:
-
-1. Solution file containing the predicted response of the customer (Probability of response 1)
-2. Code file for reproducing the submission, note that it is mandatory to submit your code for a valid final submission
-
-# 2 | Importing the Modules
