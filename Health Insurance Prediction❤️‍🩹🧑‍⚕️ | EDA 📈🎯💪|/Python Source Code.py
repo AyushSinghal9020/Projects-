@@ -10,11 +10,14 @@ import seaborn as sns
 # **DATA PREPROCESSING**
 
 from sklearn.preprocessing import FunctionTransformer
+from sklearn.decomposition import PCA
 
 # **MACHINE LEARNING MODELS**
 
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.naive_bayes import GaussianNB
 
 # **METRICS**
 
@@ -45,6 +48,8 @@ def pre(dataframe):
     x = dataframe.drop("Response" , axis = 1)
     y = dataframe["Response"]
     
+    x = pd.DataFrame(PCA(n_components = 2).fit_transform(x))
+    
     return x , y
 
 X_train , y_train = pre(train)
@@ -56,5 +61,13 @@ KNN.fit(X_train , y_train)
 DTC = DecisionTreeClassifier()
 DTC.fit(X_train , y_train)
 
+RFC = RandomForestClassifier()
+RFC.fit(X_train , y_train)
+
+GNB = GaussianNB()
+GNB.fit(X_train , y_train)
+
 print(KNN , classification_report(y_test , KNN.predict(X_test)))
 print(DTC , classification_report(y_test , DTC.predict(X_test)))
+print(RFC , classification_report(y_test , RFC.predict(X_test)))
+print(GNB , classification_report(y_test , GNB.predict(X_test)))
