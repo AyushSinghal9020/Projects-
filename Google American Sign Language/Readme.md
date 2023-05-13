@@ -13,14 +13,18 @@ This competition requires submissions to be made in the form of TensorFlow Lite 
 # Files
 |______|______|
 |---|---|
+|____________|____________
 |**Train**
+|____________|____________
 |path|The path to the landmark file.
 |file_id|A unique identifier for the data file.
 |participant_id|A unique identifier for the data contributor.
 |sequence_id|A unique identifier for the landmark sequence. Each data file may contain many sequences.
 |phrase|The labels for the landmark sequence. The train and test datasets contain randomly generated addresses, phone numbers, and urls derived from components of real addresses/phone numbers/urls.
 The landmark files contain the same data as in the ASL Signs competition (minus the row ID column) but reshaped into a wide format. This allows you to take advantage of the Parquet format to entirely skip loading landmarks that you aren't using.
+|____________|____________
 |**Landmark**
+|____________|____________
 |sequence_id|A unique identifier for the landmark sequence. Most landmark files contain 1,000 sequences. The sequence ID is used as the dataframe index.
 |frame|The frame number within a landmark sequence.
 |[x/y/z]_[type]_[landmark_index]|There are now $1,629$ spatial coordinate columns for the $x$, $y$ and $z$ coordinates for each of the $543$ landmarks. The type of landmark is one of `['face', 'left_hand', 'pose', 'right_hand']`. Details of the hand landmark locations can be found here. The spatial coordinates have already been normalized by MediaPipe. Note that the MediaPipe model is not fully trained to predict depth so you may wish to ignore the z values. The landmarks have been converted to float32.
