@@ -1,0 +1,76 @@
+import pandas as pd
+import tqdm
+from transformers import AutoTokenizer , AutoModel
+import torch
+from transformers import AutoModel
+import torch.nn as nn
+
+
+train = pd.concat(
+    [
+        pd.read_csv("/kaggle/input/kaggle-llm-science-exam/train.csv").drop("id" , axis = 1) , 
+        pd.read_csv("/kaggle/input/additional-train-data-for-llm-science-exam/6000_train_examples.csv") , 
+        pd.read_csv("/kaggle/input/additional-train-data-for-llm-science-exam/extra_train_set.csv")
+    ] , axis = 0
+)
+
+
+for index in tqdm.tqdm(range(train.shape[0]) , total = train.shape[0]):
+    train["answer"][index] = train[train["answer"][index]][index]
+
+train.drop(["Unnamed: 0" , "A" , "B" , "C" , "D" , "E"] , axis = 1 , inplace = True)
+
+tokenizer = AutoTokenizer.from_pretrained("roberta-base")
+model = AutoModel.from_pretrained("roberta-base")
+
+for index in tqdm.tqdm(range(train.shape[0])):
+    train["prompt"][index] = tokenizer(train["prompt"][index] , 
+                                       return_tensors = "pt")["input_ids"]
+    
+    with torch.no_grad():train["answer"][index] = model(tokenizer(train["answer"][index] , 
+                                                                  return_tensors = "pt")["input_ids"])[0][0][0]
+    torch.cuda.empty_cache()
+
+class model(nn.Module):
+    
+    def __init__(self):
+        super(model, self).__init__()
+    
+        self.r_model = AutoModel.from_pretrained("roberta-base")
+
+        self.linear_1 = nn.Linear(768 , 768)
+    
+    def forward(self, inputs):
+    
+        inputs = self.r_model(inputs)[0]
+        inputs = torch.mean(inputs, axis=1)
+        
+        output = self.linear_1(inputs)
+
+        return output
+
+ro = model()
+
+def loss(preds , targets):
+
+    return torch.sum(preds - targets)
+
+optim = torch.optim.Adam(ro.parameters())
+
+losses = []
+for x , y in tqdm.tqdm(zip(train["prompt"] , train["answer"]) , total = train.shape[0):
+    x = torch.tensor(x , dtype = torch.long).to("cuda")
+    y = torch.tensor(y , dtype = torch.float32).to("cuda")
+
+    x = x.reshape(shape = (1 , x.shape[0]))
+
+    if x.shape[1] > 512: x = x[: , :512]
+
+    pred = model(x)[0]
+
+    loss_fun = loss(pred , y)
+    losses.append(loss_fun)
+
+    torch.cuda.empty_cache()
+
+    optim.step
